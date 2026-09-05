@@ -1,0 +1,46 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: health-admin
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  ai:
+    openai:
+      api-key: ${LLM_API_KEY:}
+      # 注意：Spring AI 会在 base-url 后自行拼接 /v1/chat/completions，
+      # 因此这里必须是根地址（不带 /v1），与 .env 中 LLM_BASE_URL 可能带 /v1 相区分。
+      base-url: ${LLM_BASE_URL_ROOT:https://api.deepseek.com}
+      chat:
+        options:
+          model: ${LLM_MODEL:deepseek-chat}
+          temperature: 0.3
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+sa-token:
+  token-name: Authorization
+  timeout: 2592000
+  is-concurrent: true
+  is-share: false
+  token-style: tik
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+health:
+  data-init:
+    enabled: true
