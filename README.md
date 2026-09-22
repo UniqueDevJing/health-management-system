@@ -1,4 +1,4 @@
-# 智能医疗健康管理系统
+# 基于 LLM 的多 Agent 分诊就医系统
 
 <p align="left">
   <img src="https://img.shields.io/badge/Java-17-orange" alt="Java 17"/>
@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/SSE-流式-8A2BE2" alt="SSE"/>
 </p>
 
-> 本仓库是完整的健康管理系统（会员 / 预约 / 评估 / 干预 / 知识库）。
+> 本仓库为智能医疗健康管理系统（会员 / 预约 / 评估 / 干预 / 知识库）的完整实现，对外项目名与简历一致。
 > 其中 `health-admin` 模块内置了 **triagent 多 Agent 分诊编排层**（基于 Spring AI + DeepSeek），该层的设计、评测与文档详见 [triagent](https://github.com/UniqueDevJing/triagent) 仓库。
 
 在成熟的健康管理平台之上，叠加了一套以 **Spring AI 1.0.0 GA + DeepSeek**驱动的
