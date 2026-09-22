@@ -82,8 +82,11 @@ public class SymptomStateMachine {
     private static final List<String> ACCOMPANY = List.of(
             "发热", "发烧", "恶心", "呕吐", "乏力", "疲劳", "盗汗", "消瘦", "食欲",
             "腹泻", "便秘", "麻木", "疼痛加剧", "心悸", "心慌", "咳嗽", "咳痰", "皮疹");
+    /** 否定式回答（提示文案承诺了“可回答‘无’”）：无 / 没有 / 无其他症状 / 没有发烧 等 */
+    private static final Pattern NEGATIVE_ANSWER = Pattern.compile(
+            "(无|没有)(明显|其他|特殊|额外)?(的)?(伴随症状|伴随|不适|症状|病史)|^无$|^没有$|没有[^，。]{0,8}");
     private static final Pattern DURATION_PATTERN = Pattern.compile(
-            "(\\d+\\s*(个\\s*)?(小时|天|周|月|年))|(几(天|周|月|年)|多年|长期|反复|最近|这两个月|半年|一个多月|多月)");
+            "(\\d+\\s*(个\\s*)?(小时|天|周|月|年))|((一|两|三|四|五|六|七|八|九|十|几)?\\s*(个\\s*)?(小时|天|周|月|年)以内)|半小时|半个多月|几(天|周|月|年)|多年|长期|反复|最近|这两个月|半年|一个多月|多月");
 
     private static final int MAX_SESSIONS = 2000;
 
@@ -126,7 +129,9 @@ public class SymptomStateMachine {
         boolean body = BODY_PARTS.stream().anyMatch(text::contains)
                 || INFERRED_BODY.stream().anyMatch(text::contains);
         boolean duration = DURATION_PATTERN.matcher(text).find();
-        boolean accompany = ACCOMPANY.stream().anyMatch(text::contains);
+        // 提示文案承诺可回答“无”，须兑现：否定式回答视为无伴随症状，避免无限追问
+        boolean negativeAnswer = NEGATIVE_ANSWER.matcher(text).find();
+        boolean accompany = negativeAnswer || ACCOMPANY.stream().anyMatch(text::contains);
         st.bodyKnown = st.bodyKnown || body;
         st.durationKnown = st.durationKnown || duration;
         st.accompanyKnown = st.accompanyKnown || accompany;

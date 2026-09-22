@@ -19,7 +19,8 @@ public class InputGuardrailAdvice implements AgentAdvice {
     @Override
     public AgentRequest before(AgentRequest request) {
         String msg = request.getMessage();
-        if (msg == null || msg.trim().length() < 2) {
+        // 分诊状态机的澄清提示承诺“可回答‘无’”，单字否定应答须放行
+        if (msg == null || (msg.trim().length() < 2 && !"无".equals(msg.trim()))) {
             throw new AgentBlockedException("请输入您的症状描述");
         }
         if (containsBanned(msg)) {
