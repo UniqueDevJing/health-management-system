@@ -9,7 +9,9 @@
   <img src="https://img.shields.io/badge/SSE-流式-8A2BE2" alt="SSE"/>
 </p>
 
-> 本仓库为智能医疗健康管理系统（会员 / 预约 / 评估 / 干预 / 知识库）的完整实现，对外项目名与简历一致。
+> **在线体验：http://114.215.186.113/triagent/**（登录 admin / admin123，左侧「智能分诊」进入多 Agent 对话）
+>
+> 本仓库为智能医疗健康管理系统（会员 / 预约 / 评估 / 干预 / 知识库）的完整实现。
 > 其中 `health-admin` 模块内置了 **triagent 多 Agent 分诊编排层**（基于 Spring AI + DeepSeek），该层的设计、评测与文档详见 [triagent](https://github.com/UniqueDevJing/triagent) 仓库。
 
 在成熟的健康管理平台之上，叠加了一套以 **Spring AI 1.0.0 GA + DeepSeek**驱动的
@@ -30,7 +32,7 @@
 | 7 | **可观测**| 每轮耗时 / turnType / 工具次数 / 紧急度分布 / 护栏命中，`/metrics` 聚合近 500 轮 |
 | 8 | **结构化输出**| `BeanOutputConverter(TriageResult)` + 提示词内嵌 JSON Schema + 解析失败自动重试，输出稳定 |
 
-**量化评估（G1–G10 golden set，真实 DeepSeek）**：紧急度 **0.90**· 科室命中 **1.00**· 综合 **9.4 / 10**· 红旗样例安全通过 **4/4**· 全部红旗/澄清/预约路径 **0 依赖 LLM 可离线演示**。详见 [docs/agent/评估报告.md](docs/agent/评估报告.md)。
+**量化评估（G1–G30 共 30 例 golden set + LLM-as-Judge 双轨裁判，真实 DeepSeek）**：紧急度 **0.88**· 科室命中 **28/29**· 规则综合 **9.24 / 10**· LLM 裁判安全性 **29/29 pass**· 危险方向误判 **0 例**· 确定性路径 **6–24ms（0 次 LLM 调用）** vs LLM 路径均值约 5.3s；全部红旗 / 澄清 / 预约路径 0 依赖 LLM，可离线演示。详见 [docs/agent/评估报告.md](docs/agent/评估报告.md)。
 
 ---
 
@@ -156,7 +158,7 @@ cd health-web && npm install && npm run dev
 - **Phase 1**编排骨架 + SSE 流式 + 双护栏/审计 
 - **Phase 2**多 Agent 路由 + 工具事件可视化 + 预约幂等 
 - **Phase 3**RAG 溯源 + 分诊状态机 
-- **Phase 4**可观测指标 + 前端透明推理页 + G1–G10 评估 
+- **Phase 4**可观测指标 + 前端透明推理页 + G1–G30 评估 
 - **Phase 5**会话连续性路由 + 多 Agent 事实协作 + Supervisor 规划 + `plan` 事件可视化 
 - **Roadmap**向量检索（pgvector/Milvus）· Supervisor 全语义规划（LLM 拆子任务）· 单元测试补齐 · Docker Compose 一键起
 
